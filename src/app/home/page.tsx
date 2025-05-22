@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api"; 
 
+import { useAuth } from '@/context/AuthContext'; 
+import Navbar from '@/components/Navbar'; 
 
 interface Article {
   id: number; 
@@ -110,7 +112,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
+        <Navbar /> 
+      {/* <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
         <div className="flex items-center">
           <Link href="/home" className="text-4xl font-bold text-black">
             M.
@@ -156,7 +159,7 @@ export default function HomePage() {
             </>
           )}
         </div>
-      </nav>
+      </nav> */}
 
       
       <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-3 gap-8 px-20">

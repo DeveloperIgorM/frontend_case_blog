@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from '@/context/AuthContext'; // Importe o AuthProvider
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Blog App",
+  title: "M.",
   description: "Um sistema de blog completo com Next.js e Node.js",
 };
 
@@ -19,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <body className={inter.className}>
-        {children}
+        <AuthProvider> 
+          {children}
+        </AuthProvider>
         <Toaster
           position="bottom-right"
           containerStyle={{

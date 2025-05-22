@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import api from '@/lib/api'; 
 
+import { useAuth } from '@/context/AuthContext'; 
+import Navbar from '@/components/Navbar';
 
 interface Article {
   id: number;
@@ -86,36 +88,7 @@ export default function ArticlesPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-     
-      <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
-        <div className="flex items-center">
-          <Link href="/home" className="text-4xl font-bold text-black">M.</Link>
-        </div>
-        <div className="flex items-center space-x-6">
-          <Link href="/home" className="text-gray-700 hover:text-black">Home</Link>
-          <Link href="/articles" className="text-gray-700 hover:text-black">Artigos</Link>
-          {isLoggedIn ? (
-            <>
-              <Link href="/dashboard" className="text-gray-700 hover:text-black">Meu Painel</Link>
-              <button onClick={handleLogout} className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
-                Sair
-              </button>
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="px-4 py-2 text-black border border-black rounded hover:bg-gray-100">
-                Entrar
-              </Link>
-              
-              <Link href="/register" className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800">
-                Registrar
-              </Link>
-            </>
-          )}
-        </div>
-      </nav>
-
-      
+     <Navbar />
       <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-20">
         {articles.length > 0 ? (
           articles.map((article) => (
