@@ -2,44 +2,39 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import toast from "react-hot-toast";
-import api from "@/lib/api";
-import Link from "next/link";
+import api from "@/lib/api"; // Sua instância do Axios
+import Link from "next/link"; // Para o botão de voltar
 
-export default function ForgotPasswordPage() {
+export default function RegisterPage() {
   const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmSenha, setConfirmSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (newPassword !== confirmNewPassword) {
+    if (senha !== confirmSenha) {
       toast.error("As senhas não coincidem.");
       return;
     }
 
     setLoading(true);
     try {
-      const response = await api.post("/users/forgot-password-direct", {
-        email,
-        newPassword: newPassword,
-      });
-
+      // Endpoint para registro de usuário. Certifique-se de que seu backend o suporte.
+      const response = await api.post("/users/register", { email, senha });
       toast.success(
-        "Senha redefinida com sucesso! Você será redirecionado para o login."
+        "Usuário registrado com sucesso! Você será redirecionado para o login."
       );
       setTimeout(() => {
-        router.push("/login"); // Redireciona para a página de login após o sucesso
+        router.push("/login"); // Redireciona para a página de login após o registro
       }, 2000);
     } catch (error: any) {
-      console.error("Erro ao redefinir a senha:", error);
+      console.error("Erro no registro:", error);
       toast.error(
-        error.response?.data?.message ||
-          "Erro ao redefinir a senha. Verifique o e-mail."
+        error.response?.data?.message || "Erro ao registrar. Tente novamente."
       );
     } finally {
       setLoading(false);
@@ -47,7 +42,10 @@ export default function ForgotPasswordPage() {
   };
 
   return (
+    // Container principal: Flexível em linha para telas maiores, e oculta o sidebar em telas menores
     <div className="flex min-h-screen bg-gray-100">
+      {/* Lado esquerdo - Seção preta com logo e texto (para WEB) */}
+      {/* hidden em telas menores, md:flex para aparecer a partir de md */}
       <div className="hidden md:flex md:w-1/2 bg-black text-white items-center justify-center p-8">
         <div className="text-center">
           <h1 className="text-8xl font-bold mb-4">M.</h1>
@@ -55,10 +53,20 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
 
+      {/* Lado direito - Formulário de registro */}
+      {/* Ocupa a largura total em telas pequenas e 1/2 em telas maiores */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-8">
+        {/* Removido: A logo 'M.' no topo do formulário para telas de APP, pois não está na imagem de registro do app */}
+        {/* <div className="md:hidden text-center mb-8">
+            <h1 className="text-6xl font-bold text-black mb-2">M.</h1>
+            <p className="text-md text-gray-700">Inovação ao Seu Alcance.</p>
+        </div> */}
+
         <div className="w-full max-w-md space-y-6">
+          {/* Cabeçalho para telas de APP (mobile) */}
           <div className="flex items-center mb-4 md:hidden">
             {" "}
+            {/* Visível em telas menores, oculto em md+ */}
             <Link href="/login" className="mr-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -75,24 +83,27 @@ export default function ForgotPasswordPage() {
                 />
               </svg>
             </Link>
-            <h2 className="text-2xl font-bold text-black">Esqueci a senha</h2>
+            <h2 className="text-2xl font-bold text-black">Registrar</h2> {/* */}
           </div>
-
+          {/* Parágrafo de contextualização para APP */}
           <p className="text-left text-gray-600 text-sm mb-4 md:hidden">
             {" "}
-            Sem problemas! Informe seu e-mail e enviaremos um link para
-            redefinir sua senha.
+            {/* Visível em telas menores, oculto em md+ */}
+            Crie sua conta para explorar conteúdos incríveis, seguir autores e
+            participar da comunidade.
           </p>
 
+          {/* Cabeçalho para telas WEB */}
           <h2 className="hidden md:block text-3xl font-bold text-black text-left mb-6">
             {" "}
-            Esqueci a senha
+            {/* Oculto em telas menores, visível em md+ */}
+            Registrar
           </h2>
 
-          <form onSubmit={handleForgotPassword} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
             <div className="hidden md:block">
-               <div className="mt-4">
-                 <label
+              <div>
+                <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -108,7 +119,7 @@ export default function ForgotPasswordPage() {
                   placeholder="Email"
                 />
               </div>
-               <div className="mt-4">
+             <div className="mt-4">
                 <label
                   htmlFor="senha"
                   className="block text-sm font-medium text-gray-700"
@@ -117,15 +128,15 @@ export default function ForgotPasswordPage() {
                 </label>
                 <input
                   type="password"
-                  id="newPassword"
+                  id="senha"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                   required
-                  placeholder="Nova Senha"
+                  placeholder="Senha"
                 />
               </div>
-               <div className="mt-4">
+              <div className="mt-4">
                 <label
                   htmlFor="confirmar-senha"
                   className="block text-sm font-medium text-gray-700"
@@ -134,18 +145,18 @@ export default function ForgotPasswordPage() {
                 </label>
                 <input
                   type="password"
-                  id="confirmNewPassword"
+                  id="confirmSenha"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  value={confirmSenha}
+                  onChange={(e) => setConfirmSenha(e.target.value)}
                   required
-                  placeholder="Confirmar Nova Senha"
+                  placeholder="Confirmar senha"
                 />
               </div>
             </div>
 
             <div className="md:hidden">
-               <div className="mt-4">
+              <div className="mt-4">
                 <input
                   type="email"
                   id="email"
@@ -156,44 +167,63 @@ export default function ForgotPasswordPage() {
                   placeholder="Email"
                 />
               </div>
-               <div className="mt-4">
-                <input
-                  type="password"
-                  id="newPassword"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  placeholder="Nova Senha"
-                />
-              </div>
               <div className="mt-4">
                 <input
                   type="password"
-                  id="confirmNewPassword"
+                  id="senha"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
                   required
-                  placeholder="Confirmar Nova Senha"
+                  placeholder="Senha"
                 />
               </div>
+              <div className="mt-4" >
+                <input
+                  type="password"
+                  id="confirmSenha"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  value={confirmSenha}
+                  onChange={(e) => setConfirmSenha(e.target.value)}
+                  required
+                  placeholder="Confirmar senha"
+                />
+              </div>
+            </div>
+
+            {/* Checkbox para termos de uso - Apenas para APP */}
+            <div className="flex items-center md:hidden">
+              {" "}
+              {/* visível apenas em telas pequenas */}
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                required
+                className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+              />
+              <label
+                htmlFor="terms"
+                className="ml-2 block text-sm text-gray-900"
+              >
+                Li e concordo com os Termos de Uso e a Política de Privacidade.
+              </label>
             </div>
             <button
               type="submit"
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
               disabled={loading}
             >
-              {loading ? "Alterando..." : "Alterar"}
+              {loading ? "Criando conta..." : "Criar conta"}
             </button>
           </form>
           <p className="text-center text-sm text-gray-600">
-            Lembrou da senha?{" "}
+            Já tem cadastro?{" "}
             <Link
               href="/login"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
-              Fazer Login
+              Clique aqui
             </Link>
           </p>
         </div>

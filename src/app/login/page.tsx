@@ -1,16 +1,15 @@
+"use client";
 
-'use client';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-import toast from 'react-hot-toast';
-import api from '@/lib/api';
-import Link from 'next/link';
+import toast from "react-hot-toast";
+import api from "@/lib/api";
+import Link from "next/link";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -45,45 +44,85 @@ export default function LoginPage() {
 
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-8">
         <div className="w-full max-w-md space-y-6">
-      
-          <h2 className="text-3xl font-bold text-black text-left mb-2 md:hidden"> 
+          <h2 className="text-3xl font-bold text-black text-left mb-2 md:hidden">
             Bem-vindo de volta!
           </h2>
           <p className="text-left text-sm text-black mb-6 md:hidden">
-            Acesse sua conta para acompanhar artigos exclusivos, favoritar e muito mais.
+            Acesse sua conta para acompanhar artigos exclusivos, favoritar e
+            muito mais.
           </p>
 
-          
-          <h2 className="hidden md:block text-3xl font-bold text-black text-left mb-6"> 
+          <h2 className="hidden md:block text-3xl font-bold text-black text-left mb-6">
             Conectar
           </h2>
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <input
-                type="email"
-                id="email"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="Email"
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                id="senha"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                required
-                placeholder="Senha"
-              />
+            <div className="hidden md:block">
+              <div className="mt-4">
+                 <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="Email"
+                />
+              </div>
+             <div className="mt-4"> 
+                 <label
+                  htmlFor="senha"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  id="senha"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  required
+                  placeholder="Senha"
+                />
+              </div>
             </div>
 
+            <div className="md:hidden">
+              <div className="mt-4">
+                <input
+                  type="email"
+                  id="email"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="Email"
+                />
+              </div>
+             <div className="mt-4">
+                <input
+                  type="password"
+                  id="senha"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  value={senha}
+                  onChange={(e) => setSenha(e.target.value)}
+                  required
+                  placeholder="Senha"
+                />
+              </div>
+            </div>
             <p className="text-right text-sm text-black">
-              <Link href="/forgot-password" className="font-medium text-black hover:text-blue-500">
+              <Link
+                href="/forgot-password"
+                className="font-medium text-black hover:text-blue-500"
+              >
                 Esqueceu a senha?
               </Link>
             </p>
@@ -99,7 +138,10 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-gray-600">
             Novo usuário?{" "}
-            <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500">
+            <Link
+              href="/register"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
               Clique aqui
             </Link>
           </p>
