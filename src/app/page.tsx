@@ -30,7 +30,7 @@ export default function HomePage() {
 
       return () => clearTimeout(timer); 
     } else {
-      router.push('/login');
+      router.push('/home');
     }
 
     setIsLoading(false);
