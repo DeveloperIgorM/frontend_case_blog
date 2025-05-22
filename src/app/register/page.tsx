@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import api from "@/lib/api"; // Sua instância do Axios
-import Link from "next/link"; // Para o botão de voltar
+import api from "@/lib/api";
+import Link from "next/link";
 
 export default function RegisterPage() {
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmSenha, setConfirmSenha] = useState("");
@@ -24,7 +25,11 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       // Endpoint para registro de usuário. Certifique-se de que seu backend o suporte.
-      const response = await api.post("/users/register", { email, senha });
+      const response = await api.post("/users/register", {
+        nome,
+        email,
+        senha,
+      });
       toast.success(
         "Usuário registrado com sucesso! Você será redirecionado para o login."
       );
@@ -42,10 +47,7 @@ export default function RegisterPage() {
   };
 
   return (
-    // Container principal: Flexível em linha para telas maiores, e oculta o sidebar em telas menores
     <div className="flex min-h-screen bg-gray-100">
-      {/* Lado esquerdo - Seção preta com logo e texto (para WEB) */}
-      {/* hidden em telas menores, md:flex para aparecer a partir de md */}
       <div className="hidden md:flex md:w-1/2 bg-black text-white items-center justify-center p-8">
         <div className="text-center">
           <h1 className="text-8xl font-bold mb-4">M.</h1>
@@ -53,20 +55,9 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Lado direito - Formulário de registro */}
-      {/* Ocupa a largura total em telas pequenas e 1/2 em telas maiores */}
       <div className="w-full md:w-1/2 flex items-center justify-center bg-white p-8">
-        {/* Removido: A logo 'M.' no topo do formulário para telas de APP, pois não está na imagem de registro do app */}
-        {/* <div className="md:hidden text-center mb-8">
-            <h1 className="text-6xl font-bold text-black mb-2">M.</h1>
-            <p className="text-md text-gray-700">Inovação ao Seu Alcance.</p>
-        </div> */}
-
         <div className="w-full max-w-md space-y-6">
-          {/* Cabeçalho para telas de APP (mobile) */}
           <div className="flex items-center mb-4 md:hidden">
-            {" "}
-            {/* Visível em telas menores, oculto em md+ */}
             <Link href="/login" className="mr-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -83,26 +74,37 @@ export default function RegisterPage() {
                 />
               </svg>
             </Link>
-            <h2 className="text-2xl font-bold text-black">Registrar</h2> {/* */}
+            <h2 className="text-2xl font-bold text-black">Registrar</h2>
           </div>
-          {/* Parágrafo de contextualização para APP */}
           <p className="text-left text-gray-600 text-sm mb-4 md:hidden">
-            {" "}
-            {/* Visível em telas menores, oculto em md+ */}
             Crie sua conta para explorar conteúdos incríveis, seguir autores e
             participar da comunidade.
           </p>
-
-          {/* Cabeçalho para telas WEB */}
           <h2 className="hidden md:block text-3xl font-bold text-black text-left mb-6">
-            {" "}
-            {/* Oculto em telas menores, visível em md+ */}
             Registrar
           </h2>
 
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="hidden md:block">
-              <div>
+              <div className="mt-4">
+                <label
+                  htmlFor="nome"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Nome
+                </label>
+
+                <input
+                  type="nome"
+                  id="nome"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  required
+                  placeholder="Nome"
+                />
+              </div>
+              <div className="mt-4">
                 <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
@@ -119,7 +121,7 @@ export default function RegisterPage() {
                   placeholder="Email"
                 />
               </div>
-             <div className="mt-4">
+              <div className="mt-4">
                 <label
                   htmlFor="senha"
                   className="block text-sm font-medium text-gray-700"
@@ -178,7 +180,7 @@ export default function RegisterPage() {
                   placeholder="Senha"
                 />
               </div>
-              <div className="mt-4" >
+              <div className="mt-4">
                 <input
                   type="password"
                   id="confirmSenha"
@@ -191,15 +193,11 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Checkbox para termos de uso - Apenas para APP */}
             <div className="flex items-center md:hidden">
-              {" "}
-              {/* visível apenas em telas pequenas */}
               <input
                 id="terms"
                 name="terms"
                 type="checkbox"
-                required
                 className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
               />
               <label
