@@ -87,7 +87,7 @@ export default function ArticlesPage() {
   return (
     <div className="min-h-screen bg-gray-100">
      
-      <nav className="bg-white shadow-md p-4 flex justify-between items-center">
+      <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
         <div className="flex items-center">
           <Link href="/home" className="text-4xl font-bold text-black">M.</Link>
         </div>
@@ -116,7 +116,7 @@ export default function ArticlesPage() {
       </nav>
 
       
-      <main className="container mx-auto p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-20">
         {articles.length > 0 ? (
           articles.map((article) => (
             <div key={article.id} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -144,7 +144,7 @@ export default function ArticlesPage() {
         ) : (
           <div className="md:col-span-3 text-center p-4 text-gray-600">
             <p>Nenhum artigo para exibir.</p>
-          </div>
+          </div>    
         )}
       </main>
     </div>

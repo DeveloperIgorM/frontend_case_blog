@@ -110,7 +110,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-md p-4 flex justify-between items-center">
+      <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
         <div className="flex items-center">
           <Link href="/home" className="text-4xl font-bold text-black">
             M.
@@ -159,7 +159,7 @@ export default function HomePage() {
       </nav>
 
       
-      <main className="container mx-auto p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-3 gap-8 px-20">
        
         <div className="md:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
        
