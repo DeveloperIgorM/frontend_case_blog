@@ -1,27 +1,49 @@
+// src/app/login/page.tsx
 "use client";
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import Link from "next/link";
+import { useAuth } from '@/context/AuthContext'; // Importe o useAuth
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAuth(); // Use o hook useAuth para acessar a função de login
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+      // 1. Enviar as credenciais de login para o backend
       const response = await api.post("/users/login", { email, senha });
-      const { token } = response.data;
-      localStorage.setItem("token", token);
+
+      // O backend deve retornar o token E os dados do usuário.
+      // Exemplo da estrutura de resposta esperada do backend:
+      // {
+      //   token: "seu-token-jwt-aqui",
+      //   user: {
+      //     id: 1,
+      //     nome: "Nome do Usuário",
+      //     email: "usuario@example.com",
+      //     avatar_url: "/uploads/avatars/alguma_imagem.jpg" // Opcional
+      //   }
+      // }
+      const { token, user: userData } = response.data;
+
+      // 2. Chamar a função de login do AuthContext
+      // Isso irá:
+      //    a) Armazenar o token usando js-cookie
+      //    b) Atualizar o estado 'user' no AuthContext
+      //    c) Configurar o header de autorização para futuras requisições API
+      login(token, userData);
+
       toast.success("Login realizado com sucesso!");
-      router.push("/");
+      router.push("/home"); // Redireciona para a página principal (home)
     } catch (error: any) {
       console.error("Erro no login:", error);
       toast.error(
@@ -33,7 +55,6 @@ export default function LoginPage() {
   };
 
   return (
-    // Container principal: Flexível em linha para telas maiores, e oculta o sidebar em telas menores
     <div className="flex min-h-screen">
       <div className="hidden md:flex md:w-1/2 bg-black text-white items-center justify-center p-8">
         <div className="text-center">
@@ -59,7 +80,7 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="hidden md:block">
               <div className="mt-4">
-                 <label
+                <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -75,8 +96,8 @@ export default function LoginPage() {
                   placeholder="Email"
                 />
               </div>
-             <div className="mt-4"> 
-                 <label
+              <div className="mt-4">
+                <label
                   htmlFor="senha"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -106,7 +127,7 @@ export default function LoginPage() {
                   placeholder="Email"
                 />
               </div>
-             <div className="mt-4">
+              <div className="mt-4">
                 <input
                   type="password"
                   id="senha"

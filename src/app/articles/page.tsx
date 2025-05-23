@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import api from '@/lib/api'; 
+import { useAuth } from '@/context/AuthContext'; // Importe o useAuth
+
 
 
 interface Article {
