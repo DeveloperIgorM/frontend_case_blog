@@ -1,4 +1,4 @@
-// src/app/home/page.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from '@/context/AuthContext'; // Importe o useAuth
+import { useAuth } from '@/context/AuthContext';
 
-// Ícone de Curtidas (copie e cole aqui também)
+
 const HeartIcon = ({ filled = false, className = '' }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -33,14 +33,14 @@ interface Article {
   conteudo: string;
   image_url?: string | null;
   autor_id: number;
-  autor_nome: string; // Adicionado
-  likes: number;     // Adicionado
+  autor_nome: string;
+  likes: number;
   data_publicacao: string;
   data_alteracao: string | null;
   status: number;
 }
 
-// Base URL do seu backend onde os arquivos estáticos estão sendo servidos.
+
 const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3000';
 
 
@@ -49,7 +49,7 @@ export default function HomePage() {
   const [newArticles, setNewArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user, logout, loadingAuth } = useAuth(); // Use o hook useAuth
+  const { user, logout, loadingAuth } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function HomePage() {
   }, []);
 
   const handleLogout = () => {
-    logout(); // Chama a função de logout do AuthContext
+    logout();
     router.push("/login");
   };
 
@@ -121,10 +121,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* ===================================================================
-        INÍCIO DO CÓDIGO DO NAVBAR (SUBSTITUA A SUA TAG <nav> AQUI)
-        ===================================================================
-      */}
+
       <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
         <div className="flex items-center">
           <Link href="/home" className="text-4xl font-bold text-black">M.</Link>
@@ -133,45 +130,47 @@ export default function HomePage() {
           <Link href="/home" className="text-gray-700 hover:text-black">Home</Link>
           <Link href="/articles" className="text-gray-700 hover:text-black">Artigos</Link>
 
-          {loadingAuth ? ( // Exibir um carregamento enquanto o AuthProvider verifica o usuário
+          {loadingAuth ? (
             <p>Carregando...</p>
           ) : (
-            user ? ( // Se o usuário estiver logado (obtemos do useAuth)
+            user ? (
               <>
-                {/* Link para criar artigo */}
+                {/* Link para CRIAR ARTIGO - Corrigido para a rota correta */}
                 <Link
-                  href="/dashboard/publish" // Supondo que esta é a rota para criar artigo
+                  href="/dashboard/publish"
                   className="text-gray-700 hover:text-black"
                 >
                   Criar Artigo
                 </Link>
+              
+                {/* Link para EDITAR PERFIL - Adicionado aqui */}
                 <Link
-                  href="/dashboard"
+                  href="/dashboard/profile"
                   className="text-gray-700 hover:text-black"
                 >
-                  Meu Painel
+                  Meu Perfil
                 </Link>
-                {/* Avatar do usuário e Nome */}
+
                 {user.avatar_url && (
                   <img
-                    src={`${BACKEND_BASE_URL}/${user.avatar_url}`} // Caminho completo para a imagem do avatar
+                    src={`${BACKEND_BASE_URL}/${user.avatar_url}`}
                     alt="Avatar do Usuário"
                     className="w-8 h-8 rounded-full object-cover border-2 border-gray-300"
                   />
                 )}
-                <span className="text-gray-700">Olá, {user.nome}!</span> {/* Nome do usuário */}
+                <span className="text-gray-700">Olá, {user.nome}!</span>
 
-                {/* Botão de Sair */}
+
                 <button
-                  onClick={handleLogout} // Use o logout do AuthContext
+                  onClick={handleLogout}
                   className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
                 >
                   Sair
                 </button>
               </>
-            ) : ( // Se o usuário não estiver logado
+            ) : (
               <>
-                {/* Botão de Entrar */}
+
                 <Link
                   href="/login"
                   className="px-4 py-2 text-black border border-black rounded hover:bg-gray-100"
@@ -179,7 +178,7 @@ export default function HomePage() {
                   Entrar
                 </Link>
 
-                {/* Botão de Registrar */}
+
                 <Link
                   href="/register"
                   className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
@@ -191,10 +190,7 @@ export default function HomePage() {
           )}
         </div>
       </nav>
-      {/* ===================================================================
-        FIM DO CÓDIGO DO NAVBAR
-        ===================================================================
-      */}
+
 
       <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-3 gap-8 px-20">
         <div className="md:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
@@ -232,7 +228,7 @@ export default function HomePage() {
                         ).toLocaleDateString()
                       : "Data Desconhecida"}
                   </span>
-                  {/* Ícone de Curtidas no card da Home */}
+
                   <div className="flex items-center ml-auto mr-4">
                     <HeartIcon filled={false} className="h-4 w-4 mr-1 text-gray-500" />
                     <span>{articles[0].likes}</span>
@@ -328,7 +324,7 @@ export default function HomePage() {
                       ? new Date(article.data_publicacao).toLocaleDateString()
                       : "Data Desconhecida"}
                   </span>
-                  {/* Ícone de Curtidas nos outros cards */}
+
                   <div className="flex items-center ml-auto">
                     <HeartIcon filled={false} className="h-3 w-3 mr-1 text-gray-500" />
                     <span>{article.likes}</span>
