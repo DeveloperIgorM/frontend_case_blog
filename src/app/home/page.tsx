@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -6,14 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from "@/context/AuthContext";
 
-
-const HeartIcon = ({ filled = false, className = '' }) => (
+const HeartIcon = ({ filled = false, className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={`h-6 w-6 ${className}`}
-    fill={filled ? 'currentColor' : 'none'}
+    fill={filled ? "currentColor" : "none"}
     viewBox="0 0 24 24"
     stroke="currentColor"
   >
@@ -25,7 +23,6 @@ const HeartIcon = ({ filled = false, className = '' }) => (
     />
   </svg>
 );
-
 
 interface Article {
   id: number;
@@ -40,9 +37,9 @@ interface Article {
   status: number;
 }
 
-
-const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3000';
-
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ||
+  "http://localhost:3000";
 
 export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -121,76 +118,76 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-
       <nav className="bg-white shadow-md p-4 flex justify-between items-center px-20">
         <div className="flex items-center">
-          <Link href="/home" className="text-4xl font-bold text-black">M.</Link>
+          <Link href="/home" className="text-4xl font-bold text-black">
+            M.
+          </Link>
         </div>
         <div className="flex items-center space-x-6">
-          <Link href="/home" className="text-gray-700 hover:text-black">Home</Link>
-          <Link href="/articles" className="text-gray-700 hover:text-black">Artigos</Link>
+          <Link href="/home" className="text-gray-700 hover:text-black">
+            Home
+          </Link>
+          <Link href="/articles" className="text-gray-700 hover:text-black">
+            Artigos
+          </Link>
 
           {loadingAuth ? (
             <p>Carregando...</p>
-          ) : (
-            user ? (
-              <>
-                {/* Link para CRIAR ARTIGO - Corrigido para a rota correta */}
-                <Link
-                  href="/dashboard/publish"
-                  className="text-gray-700 hover:text-black"
-                >
-                  Criar Artigo
-                </Link>
-              
-                {/* Link para EDITAR PERFIL - Adicionado aqui */}
-                <Link
-                  href="/dashboard/profile"
-                  className="text-gray-700 hover:text-black"
-                >
-                  Meu Perfil
-                </Link>
+          ) : user ? (
+            <>
+              {/* Link para CRIAR ARTIGO - Corrigido para a rota correta */}
+              <Link
+                href="/dashboard/publish"
+                className="text-gray-700 hover:text-black"
+              >
+                Criar Artigo
+              </Link>
 
-                {user.avatar_url && (
+              {/* Link para EDITAR PERFIL - Adicionado aqui */}
+
+              <Link
+                href="/dashboard/profile"
+                className="text-gray-700 hover:text-black flex items-center space-x-2" // Adicione flex e space-x para alinhar
+              >
+                {user.avatar_url ? (
                   <img
                     src={`${BACKEND_BASE_URL}/${user.avatar_url}`}
                     alt="Avatar do Usuário"
                     className="w-8 h-8 rounded-full object-cover border-2 border-gray-300"
                   />
+                ) : (
+                  // Se user.avatar_url for null ou undefined, exiba "Meu Perfil"
+                  <span>Meu Perfil</span>
                 )}
-                <span className="text-gray-700">Olá, {user.nome}!</span>
+              </Link>
 
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+              >
+                Sair
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="px-4 py-2 text-black border border-black rounded hover:bg-gray-100"
+              >
+                Entrar
+              </Link>
 
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-                >
-                  Sair
-                </button>
-              </>
-            ) : (
-              <>
-
-                <Link
-                  href="/login"
-                  className="px-4 py-2 text-black border border-black rounded hover:bg-gray-100"
-                >
-                  Entrar
-                </Link>
-
-
-                <Link
-                  href="/register"
-                  className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-                >
-                  Registrar
-                </Link>
-              </>
-            )
+              <Link
+                href="/register"
+                className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+              >
+                Registrar
+              </Link>
+            </>
           )}
         </div>
       </nav>
-
 
       <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-3 gap-8 px-20">
         <div className="md:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
@@ -230,7 +227,10 @@ export default function HomePage() {
                   </span>
 
                   <div className="flex items-center ml-auto mr-4">
-                    <HeartIcon filled={false} className="h-4 w-4 mr-1 text-gray-500" />
+                    <HeartIcon
+                      filled={false}
+                      className="h-4 w-4 mr-1 text-gray-500"
+                    />
                     <span>{articles[0].likes}</span>
                   </div>
                   <Link
@@ -266,10 +266,15 @@ export default function HomePage() {
                       : ""}
                   </p>
                   <div className="flex items-center text-sm text-gray-500 mt-2">
-                    <span className="mr-2">Por {article.autor_nome || "Desconhecido"}</span>
+                    <span className="mr-2">
+                      Por {article.autor_nome || "Desconhecido"}
+                    </span>
                     {/* Ícone de Curtidas nos artigos "New" */}
                     <div className="flex items-center ml-auto">
-                      <HeartIcon filled={false} className="h-4 w-4 mr-1 text-gray-400" />
+                      <HeartIcon
+                        filled={false}
+                        className="h-4 w-4 mr-1 text-gray-400"
+                      />
                       <span>{article.likes}</span>
                     </div>
                   </div>
@@ -284,55 +289,46 @@ export default function HomePage() {
         </div>
 
         {articles.slice(1, 4).length > 0 ? (
-          articles.slice(1, 4).map(
-            (
-              article,
-              index
-            ) => (
-              <div
-                key={article.id}
-                className="bg-white rounded-lg shadow-md p-6"
-              >
-                <h4 className="text-4xl font-bold text-gray-300 mb-4">
-                  0{index + 1}
-                </h4>
-                <img
-                  src={
-                    article.image_url
-                      ? `${BACKEND_BASE_URL}/${article.image_url}`
-                      : "/placeholder-thumbnail.jpg"
-                  }
-                  alt={article.titulo || "Artigo"}
-                  className="w-full h-32 object-cover rounded mb-4"
-                />
-                <h5 className="text-lg font-semibold text-black mb-2">
-                  {article.titulo}
-                </h5>
-                <p className="text-sm text-gray-600 mb-4">
-                  {article.conteudo?.substring(0, 80) ??
-                    "Nenhum conteúdo disponível."}
-                  {article.conteudo && article.conteudo.length > 80
-                    ? "..."
-                    : ""}
-                </p>
-                <div className="flex justify-between items-center text-xs text-gray-500">
-                  <span>
-                    Por {article.autor_nome || "Desconhecido"}
-                  </span>
-                  <span>
-                    {article.data_publicacao
-                      ? new Date(article.data_publicacao).toLocaleDateString()
-                      : "Data Desconhecida"}
-                  </span>
+          articles.slice(1, 4).map((article, index) => (
+            <div key={article.id} className="bg-white rounded-lg shadow-md p-6">
+              <h4 className="text-4xl font-bold text-gray-300 mb-4">
+                0{index + 1}
+              </h4>
+              <img
+                src={
+                  article.image_url
+                    ? `${BACKEND_BASE_URL}/${article.image_url}`
+                    : "/placeholder-thumbnail.jpg"
+                }
+                alt={article.titulo || "Artigo"}
+                className="w-full h-32 object-cover rounded mb-4"
+              />
+              <h5 className="text-lg font-semibold text-black mb-2">
+                {article.titulo}
+              </h5>
+              <p className="text-sm text-gray-600 mb-4">
+                {article.conteudo?.substring(0, 80) ??
+                  "Nenhum conteúdo disponível."}
+                {article.conteudo && article.conteudo.length > 80 ? "..." : ""}
+              </p>
+              <div className="flex justify-between items-center text-xs text-gray-500">
+                <span>Por {article.autor_nome || "Desconhecido"}</span>
+                <span>
+                  {article.data_publicacao
+                    ? new Date(article.data_publicacao).toLocaleDateString()
+                    : "Data Desconhecida"}
+                </span>
 
-                  <div className="flex items-center ml-auto">
-                    <HeartIcon filled={false} className="h-3 w-3 mr-1 text-gray-500" />
-                    <span>{article.likes}</span>
-                  </div>
+                <div className="flex items-center ml-auto">
+                  <HeartIcon
+                    filled={false}
+                    className="h-3 w-3 mr-1 text-gray-500"
+                  />
+                  <span>{article.likes}</span>
                 </div>
               </div>
-            )
-          )
+            </div>
+          ))
         ) : (
           <div className="md:col-span-3 text-center p-4 text-gray-600">
             <p>Nenhum artigo recente para exibir.</p>

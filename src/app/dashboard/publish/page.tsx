@@ -77,7 +77,7 @@ export default function PublishArticlePage() {
       });
 
       toast.success(response.data.message || "Artigo publicado com sucesso!");
-      router.push(`/articles/${response.data.articleId}`); 
+      router.push(`/articles`); 
     } catch (err: any) {
       console.error("Erro ao publicar artigo:", err.response?.data);
       toast.error(err.response?.data?.message || "Erro ao publicar artigo.");
@@ -117,7 +117,7 @@ export default function PublishArticlePage() {
             />
           </div>
 
-          
+{/*           
           <div>
             <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
               Inserir Imagem
@@ -155,7 +155,7 @@ export default function PublishArticlePage() {
             <p className="mt-1 text-sm text-gray-500">
               Escolha uma imagem para o seu artigo (opcional).
             </p>
-          </div>
+          </div> */}
 
          
           <div>
