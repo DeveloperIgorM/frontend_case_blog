@@ -1,4 +1,4 @@
-// src/app/login/page.tsx
+
 "use client";
 
 import React, { useState } from "react";
@@ -6,44 +6,27 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import Link from "next/link";
-import { useAuth } from '@/context/AuthContext'; // Importe o useAuth
+import { useAuth } from '@/context/AuthContext'; 
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth(); // Use o hook useAuth para acessar a função de login
+  const { login } = useAuth(); 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // 1. Enviar as credenciais de login para o backend
       const response = await api.post("/users/login", { email, senha });
-
-      // O backend deve retornar o token E os dados do usuário.
-      // Exemplo da estrutura de resposta esperada do backend:
-      // {
-      //   token: "seu-token-jwt-aqui",
-      //   user: {
-      //     id: 1,
-      //     nome: "Nome do Usuário",
-      //     email: "usuario@example.com",
-      //     avatar_url: "/uploads/avatars/alguma_imagem.jpg" // Opcional
-      //   }
-      // }
       const { token, user: userData } = response.data;
 
-      // 2. Chamar a função de login do AuthContext
-      // Isso irá:
-      //    a) Armazenar o token usando js-cookie
-      //    b) Atualizar o estado 'user' no AuthContext
-      //    c) Configurar o header de autorização para futuras requisições API
+     
       login(token, userData);
 
       toast.success("Login realizado com sucesso!");
-      router.push("/home"); // Redireciona para a página principal (home)
+      router.push("/home"); 
     } catch (error: any) {
       console.error("Erro no login:", error);
       toast.error(

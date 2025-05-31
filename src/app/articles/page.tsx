@@ -1,4 +1,3 @@
-// src/app/articles/page.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -6,9 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from "@/context/AuthContext"; // Importe o useAuth
+import { useAuth } from "@/context/AuthContext"; 
 
-// Ícone de coração (copiado da sua home)
 const HeartIcon = ({ filled = false, className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -32,38 +30,35 @@ interface Article {
   conteudo: string;
   image_url?: string | null;
   autor_id: number;
-  autor_nome: string; // Adicionado: Assumindo que seu backend retorna o nome do autor
-  likes: number; // Adicionado: Assumindo que seu backend retorna a contagem de likes
+  autor_nome: string; 
+  likes: number; 
   data_publicacao: string;
   data_alteracao: string | null;
   status: number;
 }
 
-// Base URL do seu backend (onde as imagens estáticas estão sendo servidas)
-// Use process.env para consistência, como na sua home
 const BACKEND_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ||
   "http://localhost:3000";
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loadingArticles, setLoadingArticles] = useState(true); // Renomeado para clareza
+  const [loadingArticles, setLoadingArticles] = useState(true); 
   const [error, setError] = useState<string | null>(null);
-  const { user, logout, loadingAuth } = useAuth(); // useAuth já provê o user e loadingAuth
+  const { user, logout, loadingAuth } = useAuth(); 
   const router = useRouter();
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         setLoadingArticles(true);
-        const response = await api.get("/articles"); // endpoint para buscar todos os artigos
+        const response = await api.get("/articles"); 
 
         if (Array.isArray(response.data)) {
-          // Certifique-se de que cada artigo tem autor_nome e likes (valores padrão se ausentes)
           const fetchedArticles = response.data.map((article) => ({
             ...article,
             autor_nome: article.autor_nome || "Desconhecido",
-            likes: article.likes ?? 0, // Usar nullish coalescing para default 0 se likes for null/undefined
+            likes: article.likes ?? 0, 
           }));
           setArticles(fetchedArticles);
         } else {
@@ -82,15 +77,15 @@ export default function ArticlesPage() {
     };
 
     fetchArticles();
-  }, []); // Vazio, pois só carrega artigos uma vez
+  }, []); 
 
   const handleLogout = () => {
-    logout(); // Usa a função de logout do AuthContext
+    logout(); 
     toast.success("Desconectado com sucesso!");
     router.push("/login");
   };
 
-  // Carregamento geral (para artigos e auth)
+
   if (loadingArticles || loadingAuth) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -134,7 +129,7 @@ export default function ArticlesPage() {
             <p>Carregando...</p>
           ) : user ? (
             <>
-              {/* Links para usuário logado */}
+
               <Link
                 href="/dashboard/publish"
                 className="text-gray-700 hover:text-black"
@@ -164,7 +159,7 @@ export default function ArticlesPage() {
             </>
           ) : (
             <>
-              {/* Links para usuário não logado */}
+
               <Link
                 href="/login"
                 className="px-4 py-2 text-black border border-black rounded hover:bg-gray-100"
@@ -182,7 +177,6 @@ export default function ArticlesPage() {
         </div>
       </nav>
 
-      {/* Main Content - Artigos */}
       <main className="container mx-auto p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-20">
         {articles.length > 0 ? (
           articles.map((article) => (
@@ -194,7 +188,7 @@ export default function ArticlesPage() {
                 src={
                   article.image_url
                     ? `${BACKEND_BASE_URL}/${article.image_url}`
-                    : "/placeholder-image.jpg" // Use uma imagem de placeholder padrão
+                    : "/placeholder-image.jpg" 
                 }
                 alt={article.titulo || "Artigo"}
                 className="w-full h-48 object-cover"
@@ -213,7 +207,7 @@ export default function ArticlesPage() {
                 <div className="flex items-center text-sm text-gray-500">
                   <span className="mr-2">
                     Por {article.autor_nome || "Desconhecido"}{" "}
-                    {/* Usar autor_nome */}
+
                   </span>
                   <span>
                     -{" "}

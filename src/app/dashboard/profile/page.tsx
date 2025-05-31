@@ -1,11 +1,11 @@
-// src/app/dashboard/profile/page.tsx
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from '@/context/AuthContext'; // Confirme o caminho correto do AuthContext
+import { useAuth } from '@/context/AuthContext'; 
 
 // URL base do backend para carregar imagens
 const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3000';
@@ -130,14 +130,12 @@ export default function ProfilePage() {
 
       console.log("Resposta do backend (Sucesso):", response);
 
-      // Aqui é o ponto crucial: se chegou aqui, é SUCESSO.
-      // O backend retornou status 2xx.
-      // NUNCA deve cair no 'catch' para uma resposta 2xx.
+      
       toast.success(response.data.message || "Perfil atualizado com sucesso!");
       router.push("/dashboard/profile");
     } catch (err: any) {
-      // Este bloco SÓ deve ser executado se o backend retornar um status de erro (4xx, 5xx)
-      console.error("Erro ao atualizar perfil (Catch block):", err); // Log o objeto de erro completo
+
+      console.error("Erro ao atualizar perfil (Catch block):", err); 
       console.error("Detalhes do erro do backend:", err.response?.data);
 
       const errorMessage = err.response?.data?.message || "Ocorreu um erro ao atualizar o perfil.";

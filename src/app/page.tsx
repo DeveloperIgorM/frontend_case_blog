@@ -9,11 +9,11 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Função para detectar se é um dispositivo móvel
+
     const checkMobile = () => {
       if (typeof window !== 'undefined') {
         const userAgent = navigator.userAgent || navigator.vendor;
-        // Expressão regular para detectar dispositivos móveis comuns
+
         return /android|iphone|ipad|ipod|blackberry|windows phone/i.test(userAgent);
       }
       return false;

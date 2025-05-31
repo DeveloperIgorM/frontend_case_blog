@@ -136,7 +136,7 @@ export default function HomePage() {
             <p>Carregando...</p>
           ) : user ? (
             <>
-              {/* Link para CRIAR ARTIGO - Corrigido para a rota correta */}
+
               <Link
                 href="/dashboard/publish"
                 className="text-gray-700 hover:text-black"
@@ -144,11 +144,9 @@ export default function HomePage() {
                 Criar Artigo
               </Link>
 
-              {/* Link para EDITAR PERFIL - Adicionado aqui */}
-
               <Link
                 href="/dashboard/profile"
-                className="text-gray-700 hover:text-black flex items-center space-x-2" // Adicione flex e space-x para alinhar
+                className="text-gray-700 hover:text-black flex items-center space-x-2" 
               >
                 {user.avatar_url ? (
                   <img
@@ -157,7 +155,7 @@ export default function HomePage() {
                     className="w-8 h-8 rounded-full object-cover border-2 border-gray-300"
                   />
                 ) : (
-                  // Se user.avatar_url for null ou undefined, exiba "Meu Perfil"
+
                   <span>Meu Perfil</span>
                 )}
               </Link>
