@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
+
 
 const HeartIcon = ({ filled = false, className = "" }) => (
   <svg
@@ -77,12 +79,12 @@ export default function HomePage() {
           setArticles([]);
           setNewArticles([]);
         }
-      } catch (err: any) {
-        console.error("Erro ao buscar artigos:", err);
-        setError(err.response?.data?.message || "Erro ao carregar artigos.");
-        toast.error("Erro ao carregar artigos.");
-      } finally {
-        setLoading(false);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          toast.error(err.message);
+        } else {
+          toast.error("Erro ao buscar artigo");
+        }
       }
     };
 
@@ -136,7 +138,6 @@ export default function HomePage() {
             <p>Carregando...</p>
           ) : user ? (
             <>
-
               <Link
                 href="/dashboard/publish"
                 className="text-gray-700 hover:text-black"
@@ -146,16 +147,15 @@ export default function HomePage() {
 
               <Link
                 href="/dashboard/profile"
-                className="text-gray-700 hover:text-black flex items-center space-x-2" 
+                className="text-gray-700 hover:text-black flex items-center space-x-2"
               >
                 {user.avatar_url ? (
-                  <img
+                  <Image
                     src={`${BACKEND_BASE_URL}/${user.avatar_url}`}
                     alt="Avatar do Usuário"
                     className="w-8 h-8 rounded-full object-cover border-2 border-gray-300"
                   />
                 ) : (
-
                   <span>Meu Perfil</span>
                 )}
               </Link>
@@ -191,7 +191,7 @@ export default function HomePage() {
         <div className="md:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
           {articles.length > 0 && (
             <div className="relative">
-              <img
+              <Image
                 src={
                   articles[0].image_url
                     ? `${BACKEND_BASE_URL}/${articles[0].image_url}`
@@ -292,7 +292,7 @@ export default function HomePage() {
               <h4 className="text-4xl font-bold text-gray-300 mb-4">
                 0{index + 1}
               </h4>
-              <img
+              <Image
                 src={
                   article.image_url
                     ? `${BACKEND_BASE_URL}/${article.image_url}`

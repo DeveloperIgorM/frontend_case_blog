@@ -36,13 +36,12 @@ export default function RegisterPage() {
       setTimeout(() => {
         router.push("/login"); // Redireciona para a página de login após o registro
       }, 2000);
-    } catch (error: any) {
-      console.error("Erro no registro:", error);
-      toast.error(
-        error.response?.data?.message || "Erro ao registrar. Tente novamente."
-      );
-    } finally {
-      setLoading(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Erro ao registrar. Tente novamente");
+      }
     }
   };
 

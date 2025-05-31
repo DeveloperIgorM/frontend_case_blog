@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from "@/context/AuthContext"; 
+import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
+
 
 const HeartIcon = ({ filled = false, className = "" }) => (
   <svg
@@ -30,8 +32,8 @@ interface Article {
   conteudo: string;
   image_url?: string | null;
   autor_id: number;
-  autor_nome: string; 
-  likes: number; 
+  autor_nome: string;
+  likes: number;
   data_publicacao: string;
   data_alteracao: string | null;
   status: number;
@@ -43,22 +45,22 @@ const BACKEND_BASE_URL =
 
 export default function ArticlesPage() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loadingArticles, setLoadingArticles] = useState(true); 
+  const [loadingArticles, setLoadingArticles] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { user, logout, loadingAuth } = useAuth(); 
+  const { user, logout, loadingAuth } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
         setLoadingArticles(true);
-        const response = await api.get("/articles"); 
+        const response = await api.get("/articles");
 
         if (Array.isArray(response.data)) {
           const fetchedArticles = response.data.map((article) => ({
             ...article,
             autor_nome: article.autor_nome || "Desconhecido",
-            likes: article.likes ?? 0, 
+            likes: article.likes ?? 0,
           }));
           setArticles(fetchedArticles);
         } else {
@@ -67,24 +69,23 @@ export default function ArticlesPage() {
           toast.error("Erro: Formato de dados de artigos inválido.");
           setArticles([]);
         }
-      } catch (err: any) {
-        console.error("Erro ao buscar artigos:", err);
-        setError(err.response?.data?.message || "Erro ao carregar artigos.");
-        toast.error("Erro ao carregar artigos.");
-      } finally {
-        setLoadingArticles(false);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          toast.error(err.message);
+        } else {
+          toast.error("Erro ao buscar artigos");
+        }
       }
     };
 
     fetchArticles();
-  }, []); 
+  }, []);
 
   const handleLogout = () => {
-    logout(); 
+    logout();
     toast.success("Desconectado com sucesso!");
     router.push("/login");
   };
-
 
   if (loadingArticles || loadingAuth) {
     return (
@@ -129,7 +130,6 @@ export default function ArticlesPage() {
             <p>Carregando...</p>
           ) : user ? (
             <>
-
               <Link
                 href="/dashboard/publish"
                 className="text-gray-700 hover:text-black"
@@ -142,7 +142,7 @@ export default function ArticlesPage() {
                 className="text-gray-700 hover:text-black"
               >
                 {user.avatar_url && (
-                  <img
+                  <Image
                     src={`${BACKEND_BASE_URL}/${user.avatar_url}`}
                     alt="Avatar do Usuário"
                     className="w-8 h-8 rounded-full object-cover border-2 border-gray-300"
@@ -159,7 +159,6 @@ export default function ArticlesPage() {
             </>
           ) : (
             <>
-
               <Link
                 href="/login"
                 className="px-4 py-2 text-black border border-black rounded hover:bg-gray-100"
@@ -184,11 +183,11 @@ export default function ArticlesPage() {
               key={article.id}
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
-              <img
+              <Image
                 src={
                   article.image_url
                     ? `${BACKEND_BASE_URL}/${article.image_url}`
-                    : "/placeholder-image.jpg" 
+                    : "/placeholder-image.jpg"
                 }
                 alt={article.titulo || "Artigo"}
                 className="w-full h-48 object-cover"
@@ -207,7 +206,6 @@ export default function ArticlesPage() {
                 <div className="flex items-center text-sm text-gray-500">
                   <span className="mr-2">
                     Por {article.autor_nome || "Desconhecido"}{" "}
-
                   </span>
                   <span>
                     -{" "}

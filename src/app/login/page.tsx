@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -6,14 +5,14 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import Link from "next/link";
-import { useAuth } from '@/context/AuthContext'; 
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,18 +21,16 @@ export default function LoginPage() {
       const response = await api.post("/users/login", { email, senha });
       const { token, user: userData } = response.data;
 
-     
       login(token, userData);
 
       toast.success("Login realizado com sucesso!");
-      router.push("/home"); 
-    } catch (error: any) {
-      console.error("Erro no login:", error);
-      toast.error(
-        error.response?.data?.message || "Erro ao fazer login. Tente novamente."
-      );
-    } finally {
-      setLoading(false);
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Erro ao fazer login. Tente novamente");
+      }
     }
   };
 

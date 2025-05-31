@@ -1,14 +1,16 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from '@/context/AuthContext'; 
+import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 // URL base do backend para carregar imagens
-const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3000';
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ||
+  "http://localhost:3000";
 
 interface UserProfile {
   id: number;
@@ -18,7 +20,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
-  const { user, loadingAuth} = useAuth();
+  const { user, loadingAuth } = useAuth();
   const router = useRouter();
 
   const [formData, setFormData] = useState<UserProfile>({
@@ -45,12 +47,17 @@ export default function ProfilePage() {
           setLoading(true);
           const response = await api.get<UserProfile>(`/users/profile`);
           setFormData(response.data);
-          setPreviewAvatar(response.data.avatar_url ? `${BACKEND_BASE_URL}/${response.data.avatar_url}` : null);
-        } catch (err: any) {
-          console.error("Erro ao carregar perfil:", err);
-          toast.error(err.response?.data?.message || "Erro ao carregar perfil.");
-        } finally {
-          setLoading(false);
+          setPreviewAvatar(
+            response.data.avatar_url
+              ? `${BACKEND_BASE_URL}/${response.data.avatar_url}`
+              : null
+          );
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            toast.error(err.message);
+          } else {
+            toast.error("Erro ao carregar perfil");
+          }
         }
       }
     };
@@ -72,7 +79,11 @@ export default function ProfilePage() {
       setPreviewAvatar(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
-      setPreviewAvatar(formData.avatar_url ? `${BACKEND_BASE_URL}/${formData.avatar_url}` : null);
+      setPreviewAvatar(
+        formData.avatar_url
+          ? `${BACKEND_BASE_URL}/${formData.avatar_url}`
+          : null
+      );
     }
   };
 
@@ -130,18 +141,14 @@ export default function ProfilePage() {
 
       console.log("Resposta do backend (Sucesso):", response);
 
-      
       toast.success(response.data.message || "Perfil atualizado com sucesso!");
       router.push("/dashboard/profile");
-    } catch (err: any) {
-
-      console.error("Erro ao atualizar perfil (Catch block):", err); 
-      console.error("Detalhes do erro do backend:", err.response?.data);
-
-      const errorMessage = err.response?.data?.message || "Ocorreu um erro ao atualizar o perfil.";
-      toast.error(errorMessage);
-    } finally {
-      setIsSubmitting(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Ocorreu um erro ao atualizar perfil");
+      }
     }
   };
 
@@ -160,7 +167,10 @@ export default function ProfilePage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="nome" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="nome"
+              className="block text-sm font-medium text-gray-700"
+            >
               Nome
             </label>
             <input
@@ -175,7 +185,10 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -190,12 +203,15 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="avatar"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Avatar
             </label>
             <div className="flex items-center space-x-4">
               {previewAvatar ? (
-                <img
+                <Image
                   src={previewAvatar}
                   alt="Pré-visualização do Avatar"
                   className="w-24 h-24 rounded-full object-cover border-2 border-gray-300"

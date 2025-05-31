@@ -35,14 +35,12 @@ export default function ForgotPasswordPage() {
       setTimeout(() => {
         router.push("/login"); // Redireciona para a página de login após o sucesso
       }, 2000);
-    } catch (error: any) {
-      console.error("Erro ao redefinir a senha:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "Erro ao redefinir a senha. Verifique o e-mail."
-      );
-    } finally {
-      setLoading(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("Erro ao redefinir senha");
+      }
     }
   };
 
@@ -91,8 +89,8 @@ export default function ForgotPasswordPage() {
 
           <form onSubmit={handleForgotPassword} className="space-y-4">
             <div className="hidden md:block">
-               <div className="mt-4">
-                 <label
+              <div className="mt-4">
+                <label
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700"
                 >
@@ -108,7 +106,7 @@ export default function ForgotPasswordPage() {
                   placeholder="Email"
                 />
               </div>
-               <div className="mt-4">
+              <div className="mt-4">
                 <label
                   htmlFor="senha"
                   className="block text-sm font-medium text-gray-700"
@@ -125,7 +123,7 @@ export default function ForgotPasswordPage() {
                   placeholder="Nova Senha"
                 />
               </div>
-               <div className="mt-4">
+              <div className="mt-4">
                 <label
                   htmlFor="confirmar-senha"
                   className="block text-sm font-medium text-gray-700"
@@ -145,7 +143,7 @@ export default function ForgotPasswordPage() {
             </div>
 
             <div className="md:hidden">
-               <div className="mt-4">
+              <div className="mt-4">
                 <input
                   type="email"
                   id="email"
@@ -156,7 +154,7 @@ export default function ForgotPasswordPage() {
                   placeholder="Email"
                 />
               </div>
-               <div className="mt-4">
+              <div className="mt-4">
                 <input
                   type="password"
                   id="newPassword"

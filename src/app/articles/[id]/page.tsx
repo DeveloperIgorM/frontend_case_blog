@@ -5,9 +5,12 @@ import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
+
 
 const BACKEND_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") ||
+  "http://localhost:3000";
 
 interface Article {
   id: number;
@@ -44,12 +47,12 @@ export default function ArticlePage() {
         setLoading(true);
         const response = await api.get<Article>(`/articles/${id}`);
         setArticle(response.data);
-      } catch (err: any) {
-        console.error("Erro ao buscar artigo:", err);
-        setError(err.response?.data?.message || "Erro ao carregar artigo.");
-        toast.error("Erro ao carregar artigo.");
-      } finally {
-        setLoading(false);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          toast.error(err.message);
+        } else {
+          toast.error("Erro ao buscar artigo");
+        }
       }
     };
 
@@ -90,21 +93,27 @@ export default function ArticlePage() {
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-8">
         {article.image_url && (
-          <img
+          <Image  
             src={`${BACKEND_BASE_URL}/${article.image_url}`}
             alt={article.titulo}
             className="w-full h-96 object-cover rounded-lg mb-6"
           />
         )}
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">{article.titulo}</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">
+          {article.titulo}
+        </h1>
         <div className="text-gray-600 text-sm mb-6 flex items-center justify-between">
           <span>Por {article.autor_nome || "Desconhecido"}</span>
           <span>
             {article.data_publicacao
-              ? `Publicado em ${new Date(article.data_publicacao).toLocaleDateString()}`
+              ? `Publicado em ${new Date(
+                  article.data_publicacao
+                ).toLocaleDateString()}`
               : "Data Desconhecida"}
             {article.data_alteracao &&
-              ` (Atualizado em ${new Date(article.data_alteracao).toLocaleDateString()})`}
+              ` (Atualizado em ${new Date(
+                article.data_alteracao
+              ).toLocaleDateString()})`}
           </span>
           <div className="flex items-center">
             <svg
