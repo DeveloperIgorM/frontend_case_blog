@@ -1,19 +1,13 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import api from "@/lib/api";
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from "@/context/AuthContext";
 
-interface PageProps {
-  params: { id: string };
-  searchParams: Record<string, string> | null;
-}
-
-// URL base do backend para carregar imagens
-const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3000';
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") || "http://localhost:3000";
 
 interface Article {
   id: number;
@@ -28,13 +22,9 @@ interface Article {
   status: number;
 }
 
-
-interface ArticlePageParams {
-  id: string; 
-}
-
-export default function ArticlePage({ params, searchParams }: PageProps<ArticlePageParams>) {
-  const { id } = params; 
+export default function ArticlePage() {
+  const params = useParams();
+  const id = params.id;
   const router = useRouter();
   const { user, loadingAuth } = useAuth();
 
@@ -43,9 +33,8 @@ export default function ArticlePage({ params, searchParams }: PageProps<ArticleP
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-
     const fetchArticle = async () => {
-      if (!id) { // Garante que o ID existe
+      if (!id) {
         setError("ID do artigo não fornecido.");
         setLoading(false);
         return;
@@ -114,7 +103,8 @@ export default function ArticlePage({ params, searchParams }: PageProps<ArticleP
             {article.data_publicacao
               ? `Publicado em ${new Date(article.data_publicacao).toLocaleDateString()}`
               : "Data Desconhecida"}
-            {article.data_alteracao && ` (Atualizado em ${new Date(article.data_alteracao).toLocaleDateString()})`}
+            {article.data_alteracao &&
+              ` (Atualizado em ${new Date(article.data_alteracao).toLocaleDateString()})`}
           </span>
           <div className="flex items-center">
             <svg
